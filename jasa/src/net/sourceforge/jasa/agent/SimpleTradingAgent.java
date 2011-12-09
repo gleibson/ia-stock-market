@@ -16,9 +16,11 @@
 package net.sourceforge.jasa.agent;
 
 import net.sourceforge.jabm.EventScheduler;
-import net.sourceforge.jasa.agent.strategy.FixedQuantityStrategy;
+import net.sourceforge.jabm.event.SimEvent;
+import net.sourceforge.jasa.agent.strategy.TruthTellingStrategy;
 
 import net.sourceforge.jasa.event.MarketEvent;
+import net.sourceforge.jasa.event.TransactionExecutedEvent;
 
 import net.sourceforge.jasa.market.Market;
 
@@ -33,6 +35,12 @@ import net.sourceforge.jasa.market.Market;
  */
 
 public class SimpleTradingAgent extends AbstractTradingAgent {
+	
+	double precoDeCompra;
+	double precoDeVendaPositivo;
+	double precoDeVendaNegativo;
+	double alpha;
+	double beta;
 	
 	public SimpleTradingAgent(int stock, double funds, double privateValue,
 			EventScheduler scheduler) {
@@ -95,6 +103,24 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 		    + " valuer:" + valuer + 
 		    + totalPayoff + " lastProfit:" + lastPayoff
 		    + " strategy:" + strategy + ")";
+	}
+	
+	@Override
+	public void eventOccurred(SimEvent ev) {
+		super.eventOccurred(ev);
+		if(ev instanceof TransactionExecutedEvent) {
+			TransactionExecutedEvent transaction = (TransactionExecutedEvent)ev;
+			if(transaction.getBid().getAgent() == this) {
+				precoDeCompra = transaction.getPrice();
+				alpha = 0.05;
+				beta = 0.10;
+				precoDeVendaPositivo = precoDeCompra*alpha;
+				precoDeVendaNegativo = precoDeCompra*beta;
+				
+				((TruthTellingStrategy)getStrategy()).setBuy(false);
+				
+			}
+		}
 	}
 
 	
