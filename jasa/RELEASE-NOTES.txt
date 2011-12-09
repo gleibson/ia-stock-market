@@ -1,0 +1,18 @@
+
+  Change log for JASA 1.0 - 13th January 2011
+  
+Changes since release 0.36:
+  
+This release is a major redesign.  JASA now sits on top of the 
+JABM framework; see:
+
+http://jabm.sourceforge.net/
+
+which allows configuration via the Spring framework instead of 
+ECJ's property-based framework.
+
+Additionally, JASA has been redesigned so that it supports agent-based
+models of financial markets which allow agents to hold multiple
+buy and sell positions.  
+
+
