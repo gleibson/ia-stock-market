@@ -114,7 +114,9 @@ public class TestingJasa {
 			strategy.setBuy(true);
 
 			agent.setStrategy(strategy);
-		//	agent.setIsBuyer(true);
+			agent.setAlpha(0.05);
+			agent.setBeta(0.10);
+			agent.setRandomEngine(randomEngine);
 
 			ValuationPolicy valuationPolicy = new DailyRandomValuer(50, 55,
 					randomEngine);
@@ -125,15 +127,17 @@ public class TestingJasa {
 
 		for (int i = 0; i < 500; i++) {
 
-			TokenTradingAgent agent = new TokenTradingAgent(0, 1000,
+			SimpleTradingAgent agent = new SimpleTradingAgent(0, 1000,
 					marketFacade);
 
 			TruthTellingStrategy strategy = new TruthTellingStrategy();
 			strategy.setAgent(agent);
 			strategy.setQuantity(100);
-
+			strategy.setBuy(false);
 			agent.setStrategy(strategy);
-			agent.setIsBuyer(false);
+			agent.setAlpha(0.05);
+			agent.setBeta(0.10);
+			agent.setRandomEngine(randomEngine);
 
 			ValuationPolicy valuationPolicy = new DailyRandomValuer(50, 55,
 					randomEngine);

@@ -15,9 +15,14 @@
 
 package net.sourceforge.jasa.agent;
 
+import java.util.Date;
+
+import cern.jet.random.engine.MersenneTwister64;
 import net.sourceforge.jabm.EventScheduler;
 import net.sourceforge.jabm.event.SimEvent;
 import net.sourceforge.jasa.agent.strategy.TruthTellingStrategy;
+import net.sourceforge.jasa.agent.valuation.DailyRandomValuer;
+import net.sourceforge.jasa.agent.valuation.ValuationPolicy;
 
 import net.sourceforge.jasa.event.MarketEvent;
 import net.sourceforge.jasa.event.TransactionExecutedEvent;
@@ -36,11 +41,12 @@ import net.sourceforge.jasa.market.Market;
 
 public class SimpleTradingAgent extends AbstractTradingAgent {
 	
-	double precoDeCompra;
-	double precoDeVendaPositivo;
-	double precoDeVendaNegativo;
-	double alpha;
-	double beta;
+	private double precoDeCompra;
+	private double precoDeVendaPositivo;
+	private double precoDeVendaNegativo;
+	private double alpha;
+	private double beta;
+	private MersenneTwister64 randomEngine;
 	
 	public SimpleTradingAgent(int stock, double funds, double privateValue,
 			EventScheduler scheduler) {
@@ -111,14 +117,23 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 		if(ev instanceof TransactionExecutedEvent) {
 			TransactionExecutedEvent transaction = (TransactionExecutedEvent)ev;
 			if(transaction.getBid().getAgent() == this) {
-				precoDeCompra = transaction.getPrice();
-				alpha = 0.05;
-				beta = 0.10;
-				precoDeVendaPositivo = precoDeCompra*alpha;
-				precoDeVendaNegativo = precoDeCompra*beta;
+				setPrecoDeCompra(transaction.getPrice());
+				setPrecoDeVendaPositivo(getPrecoDeCompra()*getAlpha());
+				setPrecoDeVendaNegativo(getPrecoDeCompra()*getBeta());
 				
 				((TruthTellingStrategy)getStrategy()).setBuy(false);
 				
+				setValuationPolicy(new DailyRandomValuer(getPrecoDeVendaNegativo(), getPrecoDeVendaPositivo(),getRandomEngine()));
+				
+			}
+			else if(transaction.getAsk().getAgent() == this) {
+				setPrecoDeCompra(transaction.getPrice());
+				setPrecoDeVendaPositivo(getPrecoDeCompra()*getAlpha());
+				setPrecoDeVendaNegativo(getPrecoDeCompra()*getBeta());
+				
+				((TruthTellingStrategy)getStrategy()).setBuy(true);
+				
+				setValuationPolicy(new DailyRandomValuer(getPrecoDeVendaNegativo(), getPrecoDeVendaPositivo(),getRandomEngine()));
 			}
 		}
 	}
@@ -130,6 +145,54 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 			return 0;
 		}
 		return super.calculateProfit(auction, quantity, price);
+	}
+
+	public double getBeta() {
+		return beta;
+	}
+
+	public void setBeta(double beta) {
+		this.beta = beta;
+	}
+
+	public double getAlpha() {
+		return alpha;
+	}
+
+	public void setAlpha(double alpha) {
+		this.alpha = alpha;
+	}
+
+	public double getPrecoDeCompra() {
+		return precoDeCompra;
+	}
+
+	public void setPrecoDeCompra(double precoDeCompra) {
+		this.precoDeCompra = precoDeCompra;
+	}
+
+	public double getPrecoDeVendaPositivo() {
+		return precoDeVendaPositivo;
+	}
+
+	public void setPrecoDeVendaPositivo(double precoDeVendaPositivo) {
+		this.precoDeVendaPositivo = precoDeVendaPositivo;
+	}
+
+	public double getPrecoDeVendaNegativo() {
+		return precoDeVendaNegativo;
+	}
+
+	public void setPrecoDeVendaNegativo(double precoDeVendaNegativo) {
+		this.precoDeVendaNegativo = precoDeVendaNegativo;
+	}
+
+	public MersenneTwister64 getRandomEngine() {
+		return randomEngine;
+	}
+
+	public void setRandomEngine(MersenneTwister64 randomEngine) {
+		this.randomEngine = randomEngine;
 	}
 	
 //	@Override
