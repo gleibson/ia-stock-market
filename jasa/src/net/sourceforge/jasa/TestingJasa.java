@@ -105,15 +105,16 @@ public class TestingJasa {
 
 		for (int i = 0; i < 500; i++) {
 
-			TokenTradingAgent agent = new TokenTradingAgent(0, 1000,
+			SimpleTradingAgent agent = new SimpleTradingAgent(0, 1000,
 					marketFacade);
 
 			TruthTellingStrategy strategy = new TruthTellingStrategy();
 			strategy.setAgent(agent);
 			strategy.setQuantity(100);
+			strategy.setBuy(true);
 
 			agent.setStrategy(strategy);
-			agent.setIsBuyer(true);
+		//	agent.setIsBuyer(true);
 
 			ValuationPolicy valuationPolicy = new DailyRandomValuer(50, 55,
 					randomEngine);
