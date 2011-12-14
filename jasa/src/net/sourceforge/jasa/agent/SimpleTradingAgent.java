@@ -118,8 +118,8 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 			TransactionExecutedEvent transaction = (TransactionExecutedEvent)ev;
 			if(transaction.getBid().getAgent() == this) {
 				setPrecoDeCompra(transaction.getPrice());
-				setPrecoDeVendaPositivo(getPrecoDeCompra()*getAlpha());
-				setPrecoDeVendaNegativo(getPrecoDeCompra()*getBeta());
+				setPrecoDeVendaPositivo(getPrecoDeCompra()*(1+getAlpha()));
+				setPrecoDeVendaNegativo(getPrecoDeCompra()*(1-getBeta()));
 				
 				((TruthTellingStrategy)getStrategy()).setBuy(false);
 				
@@ -128,8 +128,8 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 			}
 			else if(transaction.getAsk().getAgent() == this) {
 				setPrecoDeCompra(transaction.getPrice());
-				setPrecoDeVendaPositivo(getPrecoDeCompra()*getAlpha());
-				setPrecoDeVendaNegativo(getPrecoDeCompra()*getBeta());
+				setPrecoDeVendaPositivo(getPrecoDeCompra()*(1+getAlpha()));
+				setPrecoDeVendaNegativo(getPrecoDeCompra()*(1-getBeta()));
 				
 				((TruthTellingStrategy)getStrategy()).setBuy(true);
 				

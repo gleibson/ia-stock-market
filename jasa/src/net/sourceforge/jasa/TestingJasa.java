@@ -3,6 +3,7 @@ package net.sourceforge.jasa;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Random;
 
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
@@ -48,10 +49,17 @@ import net.sourceforge.jasa.report.TransactionPriceTimeSeriesReport;
 
 public class TestingJasa {
 
-
 	/**
 	 * @param args
 	 */
+	private static double getGaussian(double aMean, double aVariance){
+			double gaussian=-0.1;
+			do{
+				gaussian=aMean + new Random().nextGaussian() * aVariance;
+			} while(gaussian<0);
+			return gaussian;
+	  }
+	
 	public static void main(String[] args) {
 
 		MarketFacade marketFacade = new MarketFacade();
@@ -114,8 +122,8 @@ public class TestingJasa {
 			strategy.setBuy(true);
 
 			agent.setStrategy(strategy);
-			agent.setAlpha(0.05);
-			agent.setBeta(0.10);
+			agent.setAlpha(getGaussian(0.05f, 0.03f));
+			agent.setBeta(getGaussian(0.5f, 0.1f));
 			agent.setRandomEngine(randomEngine);
 
 			ValuationPolicy valuationPolicy = new DailyRandomValuer(50, 55,
@@ -135,8 +143,8 @@ public class TestingJasa {
 			strategy.setQuantity(100);
 			strategy.setBuy(false);
 			agent.setStrategy(strategy);
-			agent.setAlpha(0.05);
-			agent.setBeta(0.10);
+			agent.setAlpha(getGaussian(0.05f, 0.03f));
+			agent.setBeta(getGaussian(0.5f, 0.1f));
 			agent.setRandomEngine(randomEngine);
 
 			ValuationPolicy valuationPolicy = new DailyRandomValuer(50, 55,
