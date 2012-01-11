@@ -60,6 +60,11 @@ public class TestingJasa {
 			return gaussian;
 	  }
 	
+	private static float alphaA = 0.05f;
+	private static float alphaB = 0.03f;
+	private static float betaA = 0.5f;
+	private static float betaB = 0.1f;
+	
 	public static void main(String[] args) {
 
 		MarketFacade marketFacade = new MarketFacade();
@@ -102,7 +107,7 @@ public class TestingJasa {
 		marketSimulation.setSimulationController(simulationController);
 		marketSimulation.setMarket(marketFacade);
 		marketSimulation.setMaximumDays(2);
-		marketSimulation.setLengthOfDay(10000);
+		marketSimulation.setLengthOfDay(1000);
 		marketSimulation.setPopulation(population);
 		marketSimulation.setAgentMixer(agentMixer);
 		marketSimulation.setAgentInitialiser(agentInitialiser);
@@ -122,8 +127,13 @@ public class TestingJasa {
 			strategy.setBuy(true);
 
 			agent.setStrategy(strategy);
-			agent.setAlpha(getGaussian(0.05f, 0.03f));
-			agent.setBeta(getGaussian(0.5f, 0.1f));
+			agent.setAlphaA(alphaA);
+			agent.setAlphaB(alphaB);
+			agent.setBetaA(betaA);
+			agent.setBetaB(betaB);
+			agent.calcAlpha();
+			agent.calcBeta();
+			
 			agent.setRandomEngine(randomEngine);
 
 			ValuationPolicy valuationPolicy = new DailyRandomValuer(50, 55,
@@ -143,8 +153,15 @@ public class TestingJasa {
 			strategy.setQuantity(100);
 			strategy.setBuy(false);
 			agent.setStrategy(strategy);
-			agent.setAlpha(getGaussian(0.05f, 0.03f));
-			agent.setBeta(getGaussian(0.5f, 0.1f));
+			agent.setAlphaA(alphaA);
+			agent.setAlphaB(alphaB);
+			agent.setBetaA(betaA);
+			agent.setBetaB(betaB);
+			agent.calcAlpha();
+			agent.calcBeta();
+			//agent.setAlpha(getGaussian(0.05f, 0.03f));
+			//agent.setBeta(getGaussian(0.5f, 0.1f));
+			
 			agent.setRandomEngine(randomEngine);
 
 			ValuationPolicy valuationPolicy = new DailyRandomValuer(50, 55,

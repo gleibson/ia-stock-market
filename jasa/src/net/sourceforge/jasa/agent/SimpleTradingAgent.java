@@ -16,6 +16,7 @@
 package net.sourceforge.jasa.agent;
 
 import java.util.Date;
+import java.util.Random;
 
 import cern.jet.random.engine.MersenneTwister64;
 import net.sourceforge.jabm.EventScheduler;
@@ -47,6 +48,11 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 	private double alpha;
 	private double beta;
 	private MersenneTwister64 randomEngine;
+	
+	private float alphaA;
+	private float alphaB;
+	private float betaA;
+	private float betaB;
 	
 	public SimpleTradingAgent(int stock, double funds, double privateValue,
 			EventScheduler scheduler) {
@@ -120,6 +126,8 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 				setPrecoDeCompra(transaction.getPrice());
 				setPrecoDeVendaPositivo(getPrecoDeCompra()*(1+getAlpha()));
 				setPrecoDeVendaNegativo(getPrecoDeCompra()*(1-getBeta()));
+				calcAlpha();
+				calcBeta();
 				
 				((TruthTellingStrategy)getStrategy()).setBuy(false);
 				
@@ -130,6 +138,8 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 				setPrecoDeCompra(transaction.getPrice());
 				setPrecoDeVendaPositivo(getPrecoDeCompra()*(1+getAlpha()));
 				setPrecoDeVendaNegativo(getPrecoDeCompra()*(1-getBeta()));
+				calcAlpha();
+				calcBeta();
 				
 				((TruthTellingStrategy)getStrategy()).setBuy(true);
 				
@@ -137,7 +147,24 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 			}
 		}
 	}
+	
 
+	
+	public void calcAlpha(){
+		setAlpha(getGaussian(getAlphaA(), getAlphaB())); 
+	}
+	
+	public void calcBeta(){
+		setBeta(getGaussian(getBetaA(), getBetaB())); 
+	}
+
+	private static double getGaussian(double aMean, double aVariance){
+		double gaussian=-0.1;
+		do{
+			gaussian=aMean + new Random().nextGaussian() * aVariance;
+		} while(gaussian<0);
+		return gaussian;
+	}
 	
 	@Override
 	public double calculateProfit(Market auction, int quantity, double price) {
@@ -155,12 +182,20 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 		this.beta = beta;
 	}
 
+	public void setBeta() {
+		this.beta = getGaussian(this.betaA, this.betaB);
+	}	
+	
 	public double getAlpha() {
 		return alpha;
 	}
 
 	public void setAlpha(double alpha) {
 		this.alpha = alpha;
+	}
+	
+	public void setAlpha() {
+		this.alpha = getGaussian(this.alphaA, this.alphaB);
 	}
 
 	public double getPrecoDeCompra() {
@@ -194,6 +229,41 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 	public void setRandomEngine(MersenneTwister64 randomEngine) {
 		this.randomEngine = randomEngine;
 	}
+
+	public float getAlphaA() {
+		return alphaA;
+	}
+
+	public void setAlphaA(float alphaA) {
+		this.alphaA = alphaA;
+	}
+
+	public float getAlphaB() {
+		return alphaB;
+	}
+
+	public void setAlphaB(float alphaB) {
+		this.alphaB = alphaB;
+	}
+
+	public float getBetaA() {
+		return betaA;
+	}
+
+	public void setBetaA(float betaA) {
+		this.betaA = betaA;
+	}
+
+	public float getBetaB() {
+		return betaB;
+	}
+
+	public void setBetaB(float betaB) {
+		this.betaB = betaB;
+	}
+	
+	
+	
 	
 //	@Override
 //	public double calculateProfit(Market auction, int quantity, double price) {
