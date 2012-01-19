@@ -51,15 +51,7 @@ public class TestingJasa {
 
 	/**
 	 * @param args
-	 */
-	private static double getGaussian(double aMean, double aVariance){
-			double gaussian=-0.1;
-			do{
-				gaussian=aMean + new Random().nextGaussian() * aVariance;
-			} while(gaussian<0);
-			return gaussian;
-	  }
-	
+	 */	
 	private static float alphaA = 0.05f;
 	private static float alphaB = 0.03f;
 	private static float betaA = 0.5f;
@@ -159,8 +151,6 @@ public class TestingJasa {
 			agent.setBetaB(betaB);
 			agent.calcAlpha();
 			agent.calcBeta();
-			//agent.setAlpha(getGaussian(0.05f, 0.03f));
-			//agent.setBeta(getGaussian(0.5f, 0.1f));
 			
 			agent.setRandomEngine(randomEngine);
 
