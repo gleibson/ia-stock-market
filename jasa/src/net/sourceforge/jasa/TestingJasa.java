@@ -1,5 +1,7 @@
 package net.sourceforge.jasa;
 
+
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -7,6 +9,8 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
+
+import xml.manager.GenerateXML;
 
 import cern.jet.random.AbstractContinousDistribution;
 import cern.jet.random.Normal;
@@ -52,7 +56,6 @@ public class TestingJasa {
 
 	/**
 	 * @param args
-<<<<<<< HEAD
 	 */
 
 	
@@ -190,8 +193,10 @@ public class TestingJasa {
 			double receiversPer = 0.1 * random.nextInt(8) + 0.1;
 			news.add(new News(receiversPer, (totalBuyers + totalSellers), times[i]));
 			System.out.println(news.get(i));
-		}
+		}		
 		
+//		new SaveObject().saveFile(news);
+		new GenerateXML(news);
 
 		population.setPrng(randomEngine);
 		population.setAgentList(agentList);

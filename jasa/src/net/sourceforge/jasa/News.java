@@ -1,10 +1,13 @@
 package net.sourceforge.jasa;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-public class News {
+public class News implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private double stockNewValue;
 	private int receiversQuantity;
@@ -52,6 +55,42 @@ public class News {
 
 	public void setDeliverTime(int deliverTime) {
 		this.deliverTime = deliverTime;
+	}
+
+	public double getStockNewValue() {
+		return stockNewValue;
+	}
+
+	public void setStockNewValue(double stockNewValue) {
+		this.stockNewValue = stockNewValue;
+	}
+
+	public int getReceiversQuantity() {
+		return receiversQuantity;
+	}
+
+	public void setReceiversQuantity(int receiversQuantity) {
+		this.receiversQuantity = receiversQuantity;
+	}
+
+	public double getReceiversPer() {
+		return receiversPer;
+	}
+
+	public void setReceiversPer(double receiversPer) {
+		this.receiversPer = receiversPer;
+	}
+
+	public ArrayList<Integer> getReceivers() {
+		return receivers;
+	}
+
+	public void setReceivers(ArrayList<Integer> receivers) {
+		this.receivers = receivers;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override

@@ -15,7 +15,9 @@
 
 package net.sourceforge.jasa.market;
 
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.sourceforge.jabm.AbstractSimulation;
@@ -23,6 +25,7 @@ import net.sourceforge.jabm.SimulationController;
 import net.sourceforge.jabm.SimulationTime;
 import net.sourceforge.jabm.event.SimulationFinishedEvent;
 import net.sourceforge.jabm.event.SimulationStartingEvent;
+import net.sourceforge.jasa.News;
 import net.sourceforge.jasa.event.EndOfDayEvent;
 import net.sourceforge.jasa.event.MarketClosedEvent;
 import net.sourceforge.jasa.event.MarketOpenEvent;
@@ -85,14 +88,19 @@ public class MarketSimulation extends AbstractSimulation
 
 	static Logger logger = Logger.getLogger(MarketSimulation.class);
 
-
+	private ArrayList <News> news = new ArrayList<News>();
+	
 	public MarketSimulation(SimulationController controller) {
 		super(controller);
 		initialiseCounters();
+		System.out.println("contructor 1");
+		readFile();
 	}
 	
 	public MarketSimulation() {
 		this(null);
+		System.out.println("constructor 2");
+		readFile();
 	}
 	
 	public void initialiseCounters() {
@@ -224,6 +232,16 @@ public class MarketSimulation extends AbstractSimulation
 		informRoundClosed();
 		checkEndOfDay();
 	}
+	
+	public void readNews(){
+		
+		
+	}
+	public void readFile(){
+		
+		
+	}
+	
 	
 	public boolean isClosed() {
 		return closed;
