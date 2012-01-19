@@ -181,17 +181,15 @@ public class TestingJasa {
 		
 		//(double receiversPer, int totalAgents)
 		Random random = new Random();
-		int [] days= new int[totalNews];
-		int [] times= new int[totalNews];
+		int max = maximumDays * lengthOfDay;
+		int [] times = new int[totalNews];
 		for (int i =  0 ; i < totalNews; i++){
-			days[i] = random.nextInt(maximumDays);
-			times[i] = random.nextInt(lengthOfDay);
+			times[i] = random.nextInt(max);
 		}
-		Arrays.sort(days);
 		Arrays.sort(times);
 		for (int i =  0 ; i < totalNews; i++){
 			double receiversPer = 0.1 * random.nextInt(8) + 0.1;
-			news.add(new News(receiversPer, (totalBuyers + totalSellers), days[i], times[i]));
+			news.add(new News(receiversPer, (totalBuyers + totalSellers), times[i]));
 			System.out.println(news.get(i));
 		}
 		

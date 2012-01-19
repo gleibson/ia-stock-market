@@ -237,9 +237,14 @@ public class MarketSimulation extends AbstractSimulation
 			close();
 		} else {
 			beginRound();
+			deliverNews();
 			invokeAgentInteractions();		
 			endRound();
 		}
+	}
+	
+	public void deliverNews(){
+		
 	}
 
 	public void informRoundClosing() {

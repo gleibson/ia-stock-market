@@ -10,16 +10,14 @@ public class News {
 	private int receiversQuantity;
 	private double receiversPer;
 	private ArrayList <Integer> receivers;
-	private int[] deliverTime;
+	private int deliverTime;
 	
 	
-	public News(double receiversPer, int totalAgents, int day, int time) {
+	public News(double receiversPer, int totalAgents, int deliverTime) {
 		this.receivers = new ArrayList <Integer> ();
 		this.receiversPer = receiversPer;
 		this.receiversQuantity = (int) (totalAgents * receiversPer);
-		this.deliverTime = new int[2];
-		this.deliverTime[0] = day;
-		this.deliverTime[1] = time;
+		this.deliverTime = deliverTime;
 		generateNewValue();
 		generateReceivers(totalAgents);
 		
@@ -48,11 +46,11 @@ public class News {
 		}
 	}
 
-	public int[] getDeliverTime() {
+	public int getDeliverTime() {
 		return deliverTime;
 	}
 
-	public void setDeliverTime(int[] deliverTime) {
+	public void setDeliverTime(int deliverTime) {
 		this.deliverTime = deliverTime;
 	}
 
@@ -60,7 +58,7 @@ public class News {
 	public String toString() {
 		return "News [stockNewValue=" + stockNewValue + ", receiversQuantity="
 				+ receiversQuantity + ", receiversPer=" + receiversPer
-				+ ", deliverTime=" + Arrays.toString(deliverTime) + "]";
+				+ ", deliverTime=" + deliverTime + "]";
 	}
 	
 	
