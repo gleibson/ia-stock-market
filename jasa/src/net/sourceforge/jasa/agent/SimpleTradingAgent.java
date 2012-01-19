@@ -42,6 +42,7 @@ import net.sourceforge.jasa.market.Market;
 
 public class SimpleTradingAgent extends AbstractTradingAgent {
 	
+	private int id;
 	private double precoDeCompra;
 	private double precoDeVendaPositivo;
 	private double precoDeVendaNegativo;
@@ -260,6 +261,14 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 
 	public void setBetaB(float betaB) {
 		this.betaB = betaB;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	

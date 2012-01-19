@@ -1,6 +1,7 @@
 package net.sourceforge.jasa;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
@@ -52,18 +53,19 @@ public class TestingJasa {
 	/**
 	 * @param args
 	 */
-	private static double getGaussian(double aMean, double aVariance){
-			double gaussian=-0.1;
-			do{
-				gaussian=aMean + new Random().nextGaussian() * aVariance;
-			} while(gaussian<0);
-			return gaussian;
-	  }
+
 	
 	private static float alphaA = 0.05f;
 	private static float alphaB = 0.03f;
 	private static float betaA = 0.5f;
 	private static float betaB = 0.1f;
+	private static int totalBuyers = 500;
+	private static int totalSellers = 500;
+	private static int totalNews = 3;
+	private static ArrayList <News> news =new ArrayList <News> ();
+	private static int maximumDays = 2;
+	private static int lengthOfDay = 20;
+	
 	
 	public static void main(String[] args) {
 
@@ -106,8 +108,8 @@ public class TestingJasa {
 		MarketSimulation marketSimulation = new MarketSimulation();
 		marketSimulation.setSimulationController(simulationController);
 		marketSimulation.setMarket(marketFacade);
-		marketSimulation.setMaximumDays(2);
-		marketSimulation.setLengthOfDay(1000);
+		marketSimulation.setMaximumDays(maximumDays);
+		marketSimulation.setLengthOfDay(lengthOfDay);
 		marketSimulation.setPopulation(population);
 		marketSimulation.setAgentMixer(agentMixer);
 		marketSimulation.setAgentInitialiser(agentInitialiser);
@@ -116,7 +118,7 @@ public class TestingJasa {
 
 
 
-		for (int i = 0; i < 500; i++) {
+		for (int i = 0; i < totalBuyers; i++) {
 
 			SimpleTradingAgent agent = new SimpleTradingAgent(0, 1000,
 					marketFacade);
@@ -139,11 +141,13 @@ public class TestingJasa {
 			ValuationPolicy valuationPolicy = new DailyRandomValuer(50, 55,
 					randomEngine);
 			agent.setValuationPolicy(valuationPolicy);
-
+			
+			agent.setId(i);
+			
 			agentList.add(agent);
 		}
 
-		for (int i = 0; i < 500; i++) {
+		for (int i = 0; i < totalSellers; i++) {
 
 			SimpleTradingAgent agent = new SimpleTradingAgent(0, 1000,
 					marketFacade);
@@ -168,8 +172,29 @@ public class TestingJasa {
 					randomEngine);
 			agent.setValuationPolicy(valuationPolicy);
 
+			agent.setId(totalBuyers + i);
+			
 			agentList.add(agent);
 		}
+		
+		//gerar noticias
+		
+		//(double receiversPer, int totalAgents)
+		Random random = new Random();
+		int [] days= new int[totalNews];
+		int [] times= new int[totalNews];
+		for (int i =  0 ; i < totalNews; i++){
+			days[i] = random.nextInt(maximumDays);
+			times[i] = random.nextInt(lengthOfDay);
+		}
+		Arrays.sort(days);
+		Arrays.sort(times);
+		for (int i =  0 ; i < totalNews; i++){
+			double receiversPer = 0.1 * random.nextInt(8) + 0.1;
+			news.add(new News(receiversPer, (totalBuyers + totalSellers), days[i], times[i]));
+			System.out.println(news.get(i));
+		}
+		
 
 		population.setPrng(randomEngine);
 		population.setAgentList(agentList);

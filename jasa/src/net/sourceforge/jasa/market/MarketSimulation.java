@@ -216,7 +216,9 @@ public class MarketSimulation extends AbstractSimulation
 //		getAuctioneer().endOfRoundProcessing();
 
 		endOfRound = true;
+		System.out.println("round: "+round+" age: "+age);
 		round++;
+		
 		age++;
 
 		informRoundClosed();
@@ -310,6 +312,7 @@ public class MarketSimulation extends AbstractSimulation
 	 */
 	protected void endDay() {
 		logger.debug("endDay()");
+		//System.out.println("day: "+day);
 		// report.debug("day = " + day + " of " + getMaximumDays());
 		round = 0;
 		informEndOfDay();
