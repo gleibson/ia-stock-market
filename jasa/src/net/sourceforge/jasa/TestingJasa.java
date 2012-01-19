@@ -52,6 +52,7 @@ public class TestingJasa {
 
 	/**
 	 * @param args
+<<<<<<< HEAD
 	 */
 
 	
@@ -163,8 +164,6 @@ public class TestingJasa {
 			agent.setBetaB(betaB);
 			agent.calcAlpha();
 			agent.calcBeta();
-			//agent.setAlpha(getGaussian(0.05f, 0.03f));
-			//agent.setBeta(getGaussian(0.5f, 0.1f));
 			
 			agent.setRandomEngine(randomEngine);
 
