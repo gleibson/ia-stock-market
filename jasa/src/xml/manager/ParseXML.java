@@ -39,28 +39,28 @@ public class ParseXML {
                         NodeList delivertime = eElement.getElementsByTagName("delivertime");
                         Element nameElement = (Element)delivertime.item(0);
                         user.setDeliverTime(Integer.parseInt(((((Node)nameElement.getChildNodes().item(0)).getNodeValue().trim())))) ;
-                         System.out.println("delivertime : " + user.getDeliverTime());
+  //                       System.out.println("delivertime : " + user.getDeliverTime());
                         
-                         System.out.println("************************************************************");
+ //                        System.out.println("************************************************************");
 //                        //-------
                         NodeList receiversquantity = eElement.getElementsByTagName("receiversquantity");
                         Element emailElement = (Element)receiversquantity.item(0);
                         user.setReceiversQuantity(Integer.parseInt((((Node)emailElement.getChildNodes().item(0)).getNodeValue().trim()))) ;
-                         System.out.println("receiversquantity : " + user.getReceiversQuantity());
-                         System.out.println("************************************************************");
+  //                       System.out.println("receiversquantity : " + user.getReceiversQuantity());
+  //                       System.out.println("************************************************************");
 //                         //-------
 //                         
                         NodeList receiversper = eElement.getElementsByTagName("receiversper");
                         Element passElement = (Element)receiversper.item(0);
                         user.setReceiversPer(Double.parseDouble((((Node)passElement.getChildNodes().item(0)).getNodeValue().trim())));
-                         System.out.println("receiversper : " + user.getReceiversPer());
-                         System.out.println("************************************************************");
+    //                     System.out.println("receiversper : " + user.getReceiversPer());
+      //                   System.out.println("************************************************************");
 //                         //-------
                         NodeList stocknewvalue = eElement.getElementsByTagName("stocknewvalue");
                         Element iduserElement = (Element)stocknewvalue.item(0);
                          user.setStockNewValue((Double.parseDouble(((Node)iduserElement.getChildNodes().item(0)).getNodeValue().trim())));
-                         System.out.println("stocknewvalue : " + user.getStockNewValue());
-                         System.out.println("************************************************************");
+      //                   System.out.println("stocknewvalue : " + user.getStockNewValue());
+      //                   System.out.println("************************************************************");
 //                         //-------
                         NodeList receivers = eElement.getElementsByTagName("receivers");
                         Element creditElement = (Element)receivers.item(0);
@@ -70,7 +70,7 @@ public class ParseXML {
                         	user.getReceivers().add(Integer.parseInt(coiso[z]));
 
                         
-                         System.out.println("************************************************************");
+      //                   System.out.println("************************************************************");
                    }
                    news.add(user);
                 }

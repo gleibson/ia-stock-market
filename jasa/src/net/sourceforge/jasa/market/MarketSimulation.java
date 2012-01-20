@@ -250,10 +250,11 @@ public class MarketSimulation extends AbstractSimulation
 			news=xml.getNews();
 			
 			for (News n : news ){
+				System.out.println("DeliverTime: "+n.getDeliverTime());
 				System.out.println("ReceiversQuantity: "+n.getReceiversQuantity());
 				System.out.println("ReceiversPer: "+n.getReceiversPer());
 				System.out.println("StockNewValue: "+n.getStockNewValue());
-				System.out.println("DeliverTime: "+n.getDeliverTime());
+				
 			}
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
