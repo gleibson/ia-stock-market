@@ -12,17 +12,19 @@ public class News implements Serializable {
 	private double stockNewValue;
 	private int receiversQuantity;
 	private double receiversPer;
-	private ArrayList <Integer> receivers;
+	private ArrayList <Integer> receivers= new ArrayList <Integer> ();
 	private int deliverTime;
 	
 	
 	public News(double receiversPer, int totalAgents, int deliverTime) {
-		this.receivers = new ArrayList <Integer> ();
 		this.receiversPer = receiversPer;
 		this.receiversQuantity = (int) (totalAgents * receiversPer);
 		this.deliverTime = deliverTime;
 		generateNewValue();
 		generateReceivers(totalAgents);
+		
+	}
+	public News(){
 		
 	}
 

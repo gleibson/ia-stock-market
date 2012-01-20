@@ -194,10 +194,10 @@ public class TestingJasa {
 			news.add(new News(receiversPer, (totalBuyers + totalSellers), times[i]));
 			System.out.println(news.get(i));
 		}		
-		
-//		new SaveObject().saveFile(news);
-		new GenerateXML(news);
 
+		// new GenerateXML(news);
+
+		
 		population.setPrng(randomEngine);
 		population.setAgentList(agentList);
 

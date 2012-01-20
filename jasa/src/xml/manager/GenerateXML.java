@@ -58,12 +58,12 @@ public class GenerateXML {
             ArrayList <Integer> rec = news.get(i).getReceivers();
             Element receivers = new Element("receivers");
 
-            for (int j = 0; j < rec.size(); j++) {
-                Element rec_value = new Element("value");
-                rec_value.addContent(Integer.toString(rec.get(j)));
-                receivers.addContent(rec_value);
-            }
+            String aux= "";
+            for (int j = 0; j < rec.size(); j++)
+            	aux= aux + rec.get(j)+",";
 
+            receivers.addContent(aux.substring(0, aux.length() - 1));
+                   
             n.addContent(receivers);
 
             laptops.addContent(n);
