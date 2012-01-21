@@ -45,6 +45,7 @@ import net.sourceforge.jasa.market.Market;
 public class SimpleTradingAgent extends AbstractTradingAgent {
 	
 	private int id;
+	private boolean type = true;
 	private double precoDeCompra;
 	private double precoDeVendaPositivo;
 	private double precoDeVendaNegativo;
@@ -124,6 +125,15 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 	
 	@Override
 	public void eventOccurred(SimEvent ev) {
+		
+		if(this.type)
+			lossAversion(ev);
+		else
+			externalEvent(ev);		
+	}
+	
+	private void lossAversion(SimEvent ev){
+		
 		super.eventOccurred(ev);
 		if(ev instanceof TransactionExecutedEvent) {
 			TransactionExecutedEvent transaction = (TransactionExecutedEvent)ev;
@@ -152,7 +162,12 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 			}
 		}
 	}
-	
+	private void externalEvent(SimEvent ev){
+		super.eventOccurred(ev);
+		if(ev instanceof TransactionExecutedEvent) {
+			TransactionExecutedEvent transaction = (TransactionExecutedEvent)ev;
+		}
+	}
 
 	
 	public void calcAlpha(){

@@ -65,7 +65,7 @@ public class TestingJasa {
 	private static int totalNews = 3;
 	private static ArrayList<News> news = new ArrayList<News>();
 	private static int maximumDays = 2;
-	private static int lengthOfDay = 20;
+	private static int lengthOfDay = 1000;
 
 	public static void main(String[] args) {
 

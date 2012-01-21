@@ -11,6 +11,6 @@
 	<classpathentry kind="lib" path="lib/repastj-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/trove-3.0.0a7/lib/trove-3.0.0a7.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jabm"/>
-	<classpathentry kind="lib" path="/home/vasco/Dropbox/Eclipse/ia-stock-market/jasa/lib/jdom.jar"/>
+	<classpathentry kind="lib" path="/home/psychok7/git/ia-stock-market/jasa/lib/jdom.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
