@@ -16,6 +16,7 @@
 package net.sourceforge.jasa.market;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.sourceforge.jabm.AbstractSimulation;
@@ -23,6 +24,7 @@ import net.sourceforge.jabm.SimulationController;
 import net.sourceforge.jabm.SimulationTime;
 import net.sourceforge.jabm.event.SimulationFinishedEvent;
 import net.sourceforge.jabm.event.SimulationStartingEvent;
+import net.sourceforge.jasa.News;
 import net.sourceforge.jasa.event.EndOfDayEvent;
 import net.sourceforge.jasa.event.MarketClosedEvent;
 import net.sourceforge.jasa.event.MarketOpenEvent;
@@ -55,6 +57,10 @@ import org.apache.log4j.Logger;
 public class MarketSimulation extends AbstractSimulation 
 		implements Serializable {
 
+	protected ArrayList <News> news =new ArrayList <News> ();
+	
+	
+	
 	protected Market market;
 	
 	protected boolean closed = false;
@@ -244,7 +250,11 @@ public class MarketSimulation extends AbstractSimulation
 	}
 	
 	public void deliverNews(){
-		
+		if (age == news.get(0).getDeliverTime()){
+			for (int i =  0; i < news.get(0).getReceiversQuantity(); i++){
+				
+			}
+		}
 	}
 
 	public void informRoundClosing() {

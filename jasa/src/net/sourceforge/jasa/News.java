@@ -53,6 +53,14 @@ public class News {
 	public void setDeliverTime(int deliverTime) {
 		this.deliverTime = deliverTime;
 	}
+	
+	public int getReceiversQuantity() {
+		return receiversQuantity;
+	}
+
+	public ArrayList<Integer> getReceivers() {
+		return receivers;
+	}
 
 	@Override
 	public String toString() {
