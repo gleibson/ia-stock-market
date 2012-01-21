@@ -15,9 +15,15 @@
 
 package net.sourceforge.jasa.market;
 
+
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import net.sourceforge.jabm.AbstractSimulation;
 import net.sourceforge.jabm.SimulationController;
@@ -47,6 +53,9 @@ import net.sourceforge.jasa.market.rules.TimingCondition;
 import net.sourceforge.jasa.view.AuctionConsoleFrame;
 
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
+
+import xml.manager.ParseXML;
 
 /**
  * @author Steve Phelps
@@ -91,10 +100,12 @@ public class MarketSimulation extends AbstractSimulation
 
 	static Logger logger = Logger.getLogger(MarketSimulation.class);
 
-
+	private ArrayList <News> news = new ArrayList<News>();
+	
 	public MarketSimulation(SimulationController controller) {
 		super(controller);
 		initialiseCounters();
+		readFile();
 	}
 	
 	public MarketSimulation() {
@@ -230,6 +241,37 @@ public class MarketSimulation extends AbstractSimulation
 		informRoundClosed();
 		checkEndOfDay();
 	}
+	
+	public void readNews(){
+		
+		
+	}
+	public void readFile(){
+		
+		try {
+			ParseXML xml= new ParseXML();
+			xml.ReadUserXmlFile(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File("news.xml")));
+			news=xml.getNews();
+			
+			for (News n : news ){
+				System.out.println("DeliverTime: "+n.getDeliverTime());
+				System.out.println("ReceiversQuantity: "+n.getReceiversQuantity());
+				System.out.println("ReceiversPer: "+n.getReceiversPer());
+				System.out.println("StockNewValue: "+n.getStockNewValue());
+				
+			}
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public boolean isClosed() {
 		return closed;
