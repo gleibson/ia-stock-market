@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.Random;
 
 import cern.jet.random.engine.MersenneTwister64;
+import cern.jet.random.engine.RandomEngine;
 import net.sourceforge.jabm.EventScheduler;
 import net.sourceforge.jabm.event.SimEvent;
 import net.sourceforge.jasa.News;
@@ -45,13 +46,17 @@ import net.sourceforge.jasa.market.Market;
 public class SimpleTradingAgent extends AbstractTradingAgent {
 	
 	private int id;
-	private boolean type = true;
+	private boolean lossAversion = false;
 	private double precoDeCompra;
 	private double precoDeVendaPositivo;
 	private double precoDeVendaNegativo;
 	private double alpha;
 	private double beta;
 	private MersenneTwister64 randomEngine;
+	
+	private int minValue;
+	private int maxValue;
+	private RandomEngine prng;
 	
 	private float alphaA;
 	private float alphaB;
@@ -126,7 +131,7 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 	@Override
 	public void eventOccurred(SimEvent ev) {
 		
-		if(this.type)
+		if(this.lossAversion)
 			lossAversion(ev);
 		else
 			externalEvent(ev);		
@@ -291,7 +296,35 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 	}
 	
 	public void deliverNews(News news){
-		this.news.add(news);
+		
+		this.minValue = (int) (this.minValue  * (1 + news.getStockNewValue()));
+		this.maxValue = (int) (this.maxValue  * (1 + news.getStockNewValue()));
+		System.out.println("Agent: "+this.id+" min: "+this.minValue+" max: "+this.maxValue);
+		setValuationPolicy(new DailyRandomValuer(this.minValue, this.maxValue,this.getRandomEngine()));
+	}
+
+	public int getMinValue() {
+		return minValue;
+	}
+
+	public void setMinValue(int minValue) {
+		this.minValue = minValue;
+	}
+
+	public int getMaxValue() {
+		return maxValue;
+	}
+
+	public void setMaxValue(int maxValue) {
+		this.maxValue = maxValue;
+	}
+
+	public RandomEngine getPrng() {
+		return prng;
+	}
+
+	public void setPrng(RandomEngine prng) {
+		this.prng = prng;
 	}
 	
 	

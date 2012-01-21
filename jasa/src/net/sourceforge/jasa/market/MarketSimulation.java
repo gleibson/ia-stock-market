@@ -244,14 +244,15 @@ public class MarketSimulation extends AbstractSimulation implements
 					.newDocumentBuilder().parse(new File("news.xml")));
 			news = xml.getNews();
 
-			/*for (News n : news) {
-				System.out.println("DeliverTime: " + n.getDeliverTime());
-				System.out.println("ReceiversQuantity: "
-						+ n.getReceiversQuantity());
-				System.out.println("ReceiversPer: " + n.getReceiversPer());
-				System.out.println("StockNewValue: " + n.getStockNewValue());
-
-			}*/
+			/*
+			 * for (News n : news) { System.out.println("DeliverTime: " +
+			 * n.getDeliverTime()); System.out.println("ReceiversQuantity: " +
+			 * n.getReceiversQuantity()); System.out.println("ReceiversPer: " +
+			 * n.getReceiversPer()); System.out.println("StockNewValue: " +
+			 * n.getStockNewValue());
+			 * 
+			 * }
+			 */
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -276,7 +277,7 @@ public class MarketSimulation extends AbstractSimulation implements
 			close();
 		} else {
 			beginRound();
-			
+
 			invokeAgentInteractions();
 			endRound();
 			deliverNews();
@@ -284,13 +285,13 @@ public class MarketSimulation extends AbstractSimulation implements
 	}
 
 	public void deliverNews() {
-		if (news.size()==0){
+		if (news.size() == 0) {
 			return;
 		}
-			
+
 		AgentList agents = this.getPopulation().getAgentList();
 		SimpleTradingAgent agent;
-		
+
 		int contador = 0;
 		if (this.age == news.get(0).getDeliverTime()) {
 			for (int i = 0; i < news.get(0).getReceiversQuantity(); i++) {
@@ -298,9 +299,9 @@ public class MarketSimulation extends AbstractSimulation implements
 				agent = (SimpleTradingAgent) agents.get(espectedAgent);
 				if (agent.getId() == espectedAgent) {
 					agent.deliverNews(news.get(0));
-					contador ++;
+					contador++;
 				} else {
-					for (int j =0; j< agents.size(); j ++){
+					for (int j = 0; j < agents.size(); j++) {
 						agent = (SimpleTradingAgent) agents.get(j);
 						if (agent.getId() == espectedAgent) {
 							agent.deliverNews(news.get(0));
@@ -310,9 +311,11 @@ public class MarketSimulation extends AbstractSimulation implements
 					}
 				}
 			}
+			System.out.println("total: " + news.get(0).getReceiversQuantity()
+					+ " contador: " + contador);
+			news.remove(0);
 		}
-		System.out.println("total: "+news.get(0).getReceiversQuantity()+" contador: "+contador);
-		news.remove(0);
+
 	}
 
 	public void informRoundClosing() {

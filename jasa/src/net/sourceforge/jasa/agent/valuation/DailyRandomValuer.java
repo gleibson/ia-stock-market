@@ -54,5 +54,5 @@ public class DailyRandomValuer extends RandomValuer {
 	public void subscribeToEvents(EventScheduler scheduler) {
 		scheduler.addListener(EndOfDayEvent.class, this);
 	}
-
+	
 }

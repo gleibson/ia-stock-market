@@ -133,11 +133,17 @@ public class TestingJasa {
 			agent.calcBeta();
 
 			agent.setRandomEngine(randomEngine);
-
-			ValuationPolicy valuationPolicy = new DailyRandomValuer(50, 55,
+			
+			int minValue = 50;
+			int maxValue = 55;
+			
+			ValuationPolicy valuationPolicy = new DailyRandomValuer(minValue, maxValue,
 					randomEngine);
 			agent.setValuationPolicy(valuationPolicy);
-
+			agent.setMinValue(minValue);
+			agent.setMaxValue(maxValue);
+			
+			
 			agent.setId(i);
 
 			agentList.add(agent);
@@ -162,10 +168,16 @@ public class TestingJasa {
 
 			agent.setRandomEngine(randomEngine);
 
-			ValuationPolicy valuationPolicy = new DailyRandomValuer(50, 55,
+			int minValue = 50;
+			int maxValue = 55;
+			
+			ValuationPolicy valuationPolicy = new DailyRandomValuer(minValue, maxValue,
 					randomEngine);
 			agent.setValuationPolicy(valuationPolicy);
-
+			
+			agent.setMinValue(minValue);
+			agent.setMaxValue(maxValue);
+			
 			agent.setId(totalBuyers + i);
 
 			agentList.add(agent);
