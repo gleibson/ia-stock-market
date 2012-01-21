@@ -15,12 +15,14 @@
 
 package net.sourceforge.jasa.agent;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
 import cern.jet.random.engine.MersenneTwister64;
 import net.sourceforge.jabm.EventScheduler;
 import net.sourceforge.jabm.event.SimEvent;
+import net.sourceforge.jasa.News;
 import net.sourceforge.jasa.agent.strategy.TruthTellingStrategy;
 import net.sourceforge.jasa.agent.valuation.DailyRandomValuer;
 import net.sourceforge.jasa.agent.valuation.ValuationPolicy;
@@ -54,6 +56,8 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 	private float alphaB;
 	private float betaA;
 	private float betaB;
+	
+	private static ArrayList <News> news =new ArrayList <News> ();
 	
 	public SimpleTradingAgent(int stock, double funds, double privateValue,
 			EventScheduler scheduler) {
@@ -271,7 +275,9 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 		this.id = id;
 	}
 	
-	
+	public void deliverNews(News news){
+		this.news.add(news);
+	}
 	
 	
 //	@Override

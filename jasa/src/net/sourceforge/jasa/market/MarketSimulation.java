@@ -15,7 +15,6 @@
 
 package net.sourceforge.jasa.market;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,11 +25,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import net.sourceforge.jabm.AbstractSimulation;
+import net.sourceforge.jabm.Agent;
+import net.sourceforge.jabm.AgentList;
+import net.sourceforge.jabm.Population;
 import net.sourceforge.jabm.SimulationController;
 import net.sourceforge.jabm.SimulationTime;
 import net.sourceforge.jabm.event.SimulationFinishedEvent;
 import net.sourceforge.jabm.event.SimulationStartingEvent;
 import net.sourceforge.jasa.News;
+import net.sourceforge.jasa.agent.SimpleTradingAgent;
 import net.sourceforge.jasa.event.EndOfDayEvent;
 import net.sourceforge.jasa.event.MarketClosedEvent;
 import net.sourceforge.jasa.event.MarketOpenEvent;
@@ -48,8 +51,6 @@ import net.sourceforge.jasa.market.rules.MaxRoundsDayEndingCondition;
 import net.sourceforge.jasa.market.rules.NullAuctionClosingCondition;
 import net.sourceforge.jasa.market.rules.TimingCondition;
 
-
-
 import net.sourceforge.jasa.view.AuctionConsoleFrame;
 
 import org.apache.log4j.Logger;
@@ -63,17 +64,15 @@ import xml.manager.ParseXML;
  * 
  */
 
-public class MarketSimulation extends AbstractSimulation 
-		implements Serializable {
+public class MarketSimulation extends AbstractSimulation implements
+		Serializable {
 
-	protected ArrayList <News> news =new ArrayList <News> ();
-	
-	
-	
+	protected ArrayList<News> news = new ArrayList<News>();
+
 	protected Market market;
-	
+
 	protected boolean closed = false;
-	
+
 	/**
 	 * The current round.
 	 */
@@ -88,47 +87,43 @@ public class MarketSimulation extends AbstractSimulation
 	 */
 	protected int day = 0;
 
-	protected TimingCondition closingCondition 
-		= new NullAuctionClosingCondition();
+	protected TimingCondition closingCondition = new NullAuctionClosingCondition();
 
 	protected TimingCondition dayEndingCondition;
 
 	protected boolean endOfRound = false;
 
-	public static final String ERROR_SHOUTSVISIBLE 
-	= "Auctioneer does not permit shout inspection";
+	public static final String ERROR_SHOUTSVISIBLE = "Auctioneer does not permit shout inspection";
 
 	static Logger logger = Logger.getLogger(MarketSimulation.class);
 
-	private ArrayList <News> news = new ArrayList<News>();
-	
 	public MarketSimulation(SimulationController controller) {
 		super(controller);
 		initialiseCounters();
 		readFile();
 	}
-	
+
 	public MarketSimulation() {
 		this(null);
 	}
-	
+
 	public void initialiseCounters() {
 		day = 0;
 		round = 0;
 		endOfRound = false;
 		age = 0;
-		closed = false;	
+		closed = false;
 	}
-	
+
 	public void initialise() {
 		initialiseCounters();
 		addListener(market.getAuctioneer());
 	}
-	
+
 	public void reset() {
 		initialiseCounters();
 	}
-	
+
 	public void informAuctionClosed() {
 		fireEvent(new MarketClosedEvent(market, getRound()));
 	}
@@ -137,9 +132,9 @@ public class MarketSimulation extends AbstractSimulation
 		fireEvent(new EndOfDayEvent(market, getRound()));
 	}
 
-//	public void informBeginOfDay() {
-//		fireEvent(new DayOpeningEvent(market, getRound()));
-//	}
+	// public void informBeginOfDay() {
+	// fireEvent(new DayOpeningEvent(market, getRound()));
+	// }
 
 	public void informAuctionOpen() {
 		fireEvent(new MarketOpenEvent(market, getRound()));
@@ -148,7 +143,7 @@ public class MarketSimulation extends AbstractSimulation
 	public void beginRound() {
 		if (closingCondition.eval()) {
 			close();
-		} else {			
+		} else {
 			endOfRound = false;
 		}
 	}
@@ -167,7 +162,7 @@ public class MarketSimulation extends AbstractSimulation
 	public int getDay() {
 		return day;
 	}
-	
+
 	public Auctioneer getAuctioneer() {
 		return market.getAuctioneer();
 	}
@@ -192,10 +187,9 @@ public class MarketSimulation extends AbstractSimulation
 	public void run() {
 
 		initialise();
-		
+
 		if (getAuctioneer() == null) {
-			throw new AuctionRuntimeException(
-			    "No auctioneer has been assigned");
+			throw new AuctionRuntimeException("No auctioneer has been assigned");
 		}
 
 		begin();
@@ -230,36 +224,34 @@ public class MarketSimulation extends AbstractSimulation
 	public void endRound() {
 		informRoundClosing();
 
-//		getAuctioneer().endOfRoundProcessing();
+		// getAuctioneer().endOfRoundProcessing();
 
 		endOfRound = true;
-		System.out.println("round: "+round+" age: "+age);
+		// System.out.println("round: "+round+" age: "+age);
 		round++;
-		
+
 		age++;
 
 		informRoundClosed();
 		checkEndOfDay();
 	}
-	
-	public void readNews(){
-		
-		
-	}
-	public void readFile(){
-		
+
+	public void readFile() {
+
 		try {
-			ParseXML xml= new ParseXML();
-			xml.ReadUserXmlFile(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File("news.xml")));
-			news=xml.getNews();
-			
-			for (News n : news ){
-				System.out.println("DeliverTime: "+n.getDeliverTime());
-				System.out.println("ReceiversQuantity: "+n.getReceiversQuantity());
-				System.out.println("ReceiversPer: "+n.getReceiversPer());
-				System.out.println("StockNewValue: "+n.getStockNewValue());
-				
-			}
+			ParseXML xml = new ParseXML();
+			xml.ReadUserXmlFile(DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder().parse(new File("news.xml")));
+			news = xml.getNews();
+
+			/*for (News n : news) {
+				System.out.println("DeliverTime: " + n.getDeliverTime());
+				System.out.println("ReceiversQuantity: "
+						+ n.getReceiversQuantity());
+				System.out.println("ReceiversPer: " + n.getReceiversPer());
+				System.out.println("StockNewValue: " + n.getStockNewValue());
+
+			}*/
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -271,8 +263,7 @@ public class MarketSimulation extends AbstractSimulation
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	public boolean isClosed() {
 		return closed;
 	}
@@ -285,18 +276,43 @@ public class MarketSimulation extends AbstractSimulation
 			close();
 		} else {
 			beginRound();
-			deliverNews();
-			invokeAgentInteractions();		
+			
+			invokeAgentInteractions();
 			endRound();
+			deliverNews();
 		}
 	}
-	
-	public void deliverNews(){
-		if (age == news.get(0).getDeliverTime()){
-			for (int i =  0; i < news.get(0).getReceiversQuantity(); i++){
-				
+
+	public void deliverNews() {
+		if (news.size()==0){
+			return;
+		}
+			
+		AgentList agents = this.getPopulation().getAgentList();
+		SimpleTradingAgent agent;
+		
+		int contador = 0;
+		if (this.age == news.get(0).getDeliverTime()) {
+			for (int i = 0; i < news.get(0).getReceiversQuantity(); i++) {
+				int espectedAgent = news.get(0).getReceivers().get(i);
+				agent = (SimpleTradingAgent) agents.get(espectedAgent);
+				if (agent.getId() == espectedAgent) {
+					agent.deliverNews(news.get(0));
+					contador ++;
+				} else {
+					for (int j =0; j< agents.size(); j ++){
+						agent = (SimpleTradingAgent) agents.get(j);
+						if (agent.getId() == espectedAgent) {
+							agent.deliverNews(news.get(0));
+							contador++;
+							break;
+						}
+					}
+				}
 			}
 		}
+		System.out.println("total: "+news.get(0).getReceiversQuantity()+" contador: "+contador);
+		news.remove(0);
 	}
 
 	public void informRoundClosing() {
@@ -307,59 +323,59 @@ public class MarketSimulation extends AbstractSimulation
 		fireEvent(new RoundClosedEvent(market, round));
 	}
 
-//	public void placeOrder(Order shout) throws AuctionException {
-//
-//		// TODO: to switch the following two lines?
-//
-//		fireEvent(new OrderReceivedEvent(market, round, shout));
-//		market.placeOrder(shout);
-//		fireEvent(new OrderPlacedEvent(market, round, shout));
-//
-////		setChanged();
-////		notifyObservers();
-//	}
-//
-//	public void changeShout(Order shout) throws AuctionException {
-//		removeOrder(shout);
-//		placeOrder(shout);
-//	}
-//	
-//	public void removeOrder(Order shout) {
-//		// Remove this shout and all of its children.
-//		for (Order s = shout; s != null; s = s.getChild()) {
-//			getAuctioneer().removeShout(s);
-//			// if ( s != shout ) {
-//			// ShoutPool.release(s);
-//			// }
-//		}
-//		shout.makeChildless();
-//	}
+	// public void placeOrder(Order shout) throws AuctionException {
+	//
+	// // TODO: to switch the following two lines?
+	//
+	// fireEvent(new OrderReceivedEvent(market, round, shout));
+	// market.placeOrder(shout);
+	// fireEvent(new OrderPlacedEvent(market, round, shout));
+	//
+	// // setChanged();
+	// // notifyObservers();
+	// }
+	//
+	// public void changeShout(Order shout) throws AuctionException {
+	// removeOrder(shout);
+	// placeOrder(shout);
+	// }
+	//
+	// public void removeOrder(Order shout) {
+	// // Remove this shout and all of its children.
+	// for (Order s = shout; s != null; s = s.getChild()) {
+	// getAuctioneer().removeShout(s);
+	// // if ( s != shout ) {
+	// // ShoutPool.release(s);
+	// // }
+	// }
+	// shout.makeChildless();
+	// }
 
 	/**
 	 * Return an iterator iterating over all traders registered (as opposed to
 	 * actively trading) in the market.
 	 */
-//	public Iterator getTraderIterator() {
-////		return registeredTraders.iterator();
-//		return null;
-//	}
+	// public Iterator getTraderIterator() {
+	// // return registeredTraders.iterator();
+	// return null;
+	// }
 
-//	public Iterator getActiveTraderIterator() {
-////		return activeTraders.iterator();
-//		return null;
-//	}
-//
-//	protected void initialise() {
-//		round = 0;
-//		day = 0;
-//		age = 0;
-//	}
+	// public Iterator getActiveTraderIterator() {
+	// // return activeTraders.iterator();
+	// return null;
+	// }
+	//
+	// protected void initialise() {
+	// round = 0;
+	// day = 0;
+	// age = 0;
+	// }
 
 	protected void checkEndOfDay() {
 		if (dayEndingCondition != null && dayEndingCondition.eval())
 			endDay();
 	}
-	
+
 	public void close() {
 		closed = true;
 	}
@@ -369,11 +385,11 @@ public class MarketSimulation extends AbstractSimulation
 	 */
 	protected void endDay() {
 		logger.debug("endDay()");
-		//System.out.println("day: "+day);
+		// System.out.println("day: "+day);
 		// report.debug("day = " + day + " of " + getMaximumDays());
 		round = 0;
 		informEndOfDay();
-//		getAuctioneer().endOfDayProcessing();
+		// getAuctioneer().endOfDayProcessing();
 		day++;
 	}
 
@@ -381,16 +397,18 @@ public class MarketSimulation extends AbstractSimulation
 		TimingCondition cond = getAuctionClosingCondition(MaxRoundsAuctionClosingCondition.class);
 
 		if (cond != null) {
-			return ((MaxRoundsAuctionClosingCondition) cond).getRemainingRounds();
+			return ((MaxRoundsAuctionClosingCondition) cond)
+					.getRemainingRounds();
 		} else {
 			cond = getDayEndingCondition(MaxRoundsDayEndingCondition.class);
 
 			if (cond != null) {
-				return ((MaxRoundsDayEndingCondition) cond).getRemainingRounds();
+				return ((MaxRoundsDayEndingCondition) cond)
+						.getRemainingRounds();
 			} else {
 				throw new AuctionRuntimeException(
-				    getClass()
-				        + " requires a TimingCondition knowing remaining time in the market to be configured");
+						getClass()
+								+ " requires a TimingCondition knowing remaining time in the market to be configured");
 			}
 		}
 	}
@@ -406,7 +424,8 @@ public class MarketSimulation extends AbstractSimulation
 	}
 
 	public void setLengthOfDay(int lengthOfDay) {
-		MaxRoundsDayEndingCondition cond = new MaxRoundsDayEndingCondition(market);
+		MaxRoundsDayEndingCondition cond = new MaxRoundsDayEndingCondition(
+				market);
 		cond.setLengthOfDay(lengthOfDay);
 		setDayEndingCondition(cond);
 	}
@@ -422,15 +441,14 @@ public class MarketSimulation extends AbstractSimulation
 	}
 
 	public void setMaximumRounds(int maximumRounds) {
-		MaxRoundsAuctionClosingCondition cond = 
-			new MaxRoundsAuctionClosingCondition(market);
+		MaxRoundsAuctionClosingCondition cond = new MaxRoundsAuctionClosingCondition(
+				market);
 		cond.setMaximumRounds(maximumRounds);
 		setAuctionClosingCondition(cond);
 	}
 
 	public int getMaximumRounds() {
-		TimingCondition cond = 
-			getAuctionClosingCondition(MaxRoundsAuctionClosingCondition.class);
+		TimingCondition cond = getAuctionClosingCondition(MaxRoundsAuctionClosingCondition.class);
 
 		if (cond != null) {
 			return ((MaxRoundsAuctionClosingCondition) cond).getMaximumRounds();
@@ -441,13 +459,13 @@ public class MarketSimulation extends AbstractSimulation
 
 	public void setMaximumDays(int maximumDays) {
 		MaxDaysAuctionClosingCondition cond = new MaxDaysAuctionClosingCondition(
-		    market);
+				market);
 		cond.setMaximumDays(maximumDays);
 		setAuctionClosingCondition(cond);
 	}
 
 	private TimingCondition getTimingCondition(TimingCondition cond,
-	    Class conditionClass) {
+			Class conditionClass) {
 		if (cond != null) {
 			if (cond.getClass().equals(conditionClass)) {
 				return cond;
@@ -495,5 +513,5 @@ public class MarketSimulation extends AbstractSimulation
 	public SimulationTime getSimulationTime() {
 		return new SimulationTime(age);
 	}
-	
+
 }

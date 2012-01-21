@@ -75,10 +75,6 @@ public class News implements Serializable {
 		this.stockNewValue = stockNewValue;
 	}
 
-	public int getReceiversQuantity() {
-		return receiversQuantity;
-	}
-
 	public void setReceiversQuantity(int receiversQuantity) {
 		this.receiversQuantity = receiversQuantity;
 	}
@@ -89,10 +85,6 @@ public class News implements Serializable {
 
 	public void setReceiversPer(double receiversPer) {
 		this.receiversPer = receiversPer;
-	}
-
-	public ArrayList<Integer> getReceivers() {
-		return receivers;
 	}
 
 	public void setReceivers(ArrayList<Integer> receivers) {
@@ -114,4 +106,3 @@ public class News implements Serializable {
 	
 }
 	
-
