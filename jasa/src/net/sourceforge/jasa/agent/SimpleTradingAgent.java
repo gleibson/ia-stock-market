@@ -44,7 +44,7 @@ import net.sourceforge.jasa.market.Market;
  */
 
 public class SimpleTradingAgent extends AbstractTradingAgent {
-	
+
 	private int id;
 	private boolean lossAversion = false;
 	private double precoDeCompra;
@@ -53,18 +53,18 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 	private double alpha;
 	private double beta;
 	private MersenneTwister64 randomEngine;
-	
+
 	private int minValue;
 	private int maxValue;
 	private RandomEngine prng;
-	
+
 	private float alphaA;
 	private float alphaB;
 	private float betaA;
 	private float betaB;
-	
-	private static ArrayList <News> news =new ArrayList <News> ();
-	
+
+	private static ArrayList<News> news = new ArrayList<News>();
+
 	public SimpleTradingAgent(int stock, double funds, double privateValue,
 			EventScheduler scheduler) {
 		super(stock, funds, privateValue, scheduler);
@@ -79,8 +79,8 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 		super(stock, funds, scheduler);
 	}
 
-	public SimpleTradingAgent(double privateValue,
-			boolean isSeller, TradingStrategy strategy, EventScheduler scheduler) {
+	public SimpleTradingAgent(double privateValue, boolean isSeller,
+			TradingStrategy strategy, EventScheduler scheduler) {
 		super(0, 0, privateValue, strategy, scheduler);
 	}
 
@@ -91,11 +91,11 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 	public SimpleTradingAgent(EventScheduler scheduler) {
 		this(0, scheduler);
 	}
-	
+
 	public SimpleTradingAgent() {
 		this(null);
 	}
-	
+
 	public void onAgentArrival(Market auction) {
 		super.onAgentArrival(auction);
 		lastPayoff = 0;
@@ -104,10 +104,11 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 	public boolean acceptDeal(Market auction, double price, int quantity) {
 		return price >= valuer.determineValue(auction);
 	}
-//	
-//	public void setVolume(int volume) {
-//		this.volume = volume;
-//	}
+
+	//
+	// public void setVolume(int volume) {
+	// this.volume = volume;
+	// }
 
 	public double getLastPayoff() {
 		return lastPayoff;
@@ -122,75 +123,92 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 	}
 
 	public String toString() {
-		return "(" + getClass() + " id:" + hashCode() 
-		    + " valuer:" + valuer + 
-		    + totalPayoff + " lastProfit:" + lastPayoff
-		    + " strategy:" + strategy + ")";
+		return "(" + getClass() + " id:" + hashCode() + " valuer:" + valuer
+				+ +totalPayoff + " lastProfit:" + lastPayoff + " strategy:"
+				+ strategy + ")";
 	}
-	
+
 	@Override
 	public void eventOccurred(SimEvent ev) {
-		
-		if(this.lossAversion)
+
+		if (this.lossAversion)
 			lossAversion(ev);
 		else
-			externalEvent(ev);		
+			externalEvent(ev);
 	}
-	
-	private void lossAversion(SimEvent ev){
-		
+
+	private void lossAversion(SimEvent ev) {
+
 		super.eventOccurred(ev);
-		if(ev instanceof TransactionExecutedEvent) {
-			TransactionExecutedEvent transaction = (TransactionExecutedEvent)ev;
-			if(transaction.getBid().getAgent() == this) {
+		if (ev instanceof TransactionExecutedEvent) {
+			TransactionExecutedEvent transaction = (TransactionExecutedEvent) ev;
+			if (transaction.getBid().getAgent() == this) {
 				setPrecoDeCompra(transaction.getPrice());
-				setPrecoDeVendaPositivo(getPrecoDeCompra()*(1+getAlpha()));
-				setPrecoDeVendaNegativo(getPrecoDeCompra()*(1-getBeta()));
+				setPrecoDeVendaPositivo(getPrecoDeCompra() * (1 + getAlpha()));
+				setPrecoDeVendaNegativo(getPrecoDeCompra() * (1 - getBeta()));
 				calcAlpha();
 				calcBeta();
-				
-				((TruthTellingStrategy)getStrategy()).setBuy(false);
-				
-				setValuationPolicy(new DailyRandomValuer(getPrecoDeVendaNegativo(), getPrecoDeVendaPositivo(),getRandomEngine()));
-				
-			}
-			else if(transaction.getAsk().getAgent() == this) {
+
+				((TruthTellingStrategy) getStrategy()).setBuy(false);
+
+				setValuationPolicy(new DailyRandomValuer(
+						getPrecoDeVendaNegativo(), getPrecoDeVendaPositivo(),
+						getRandomEngine()));
+
+			} else if (transaction.getAsk().getAgent() == this) {
 				setPrecoDeCompra(transaction.getPrice());
-				setPrecoDeVendaPositivo(getPrecoDeCompra()*(1+getAlpha()));
-				setPrecoDeVendaNegativo(getPrecoDeCompra()*(1-getBeta()));
+				setPrecoDeVendaPositivo(getPrecoDeCompra() * (1 + getAlpha()));
+				setPrecoDeVendaNegativo(getPrecoDeCompra() * (1 - getBeta()));
 				calcAlpha();
 				calcBeta();
-				
-				((TruthTellingStrategy)getStrategy()).setBuy(true);
-				
-				setValuationPolicy(new DailyRandomValuer(getPrecoDeVendaNegativo(), getPrecoDeVendaPositivo(),getRandomEngine()));
+
+				((TruthTellingStrategy) getStrategy()).setBuy(true);
+
+				setValuationPolicy(new DailyRandomValuer(
+						getPrecoDeVendaNegativo(), getPrecoDeVendaPositivo(),
+						getRandomEngine()));
 			}
 		}
 	}
-	private void externalEvent(SimEvent ev){
+
+	private void externalEvent(SimEvent ev) {
 		super.eventOccurred(ev);
-		if(ev instanceof TransactionExecutedEvent) {
-			TransactionExecutedEvent transaction = (TransactionExecutedEvent)ev;
+
+		if (ev instanceof TransactionExecutedEvent) {
+			TransactionExecutedEvent transaction = (TransactionExecutedEvent) ev;
+			if (transaction.getBid().getAgent() == this
+					|| (transaction.getAsk().getAgent() == this)) {
+				setPrecoDeCompra(transaction.getPrice());
+				 System.out.print("Precos antigos: " + this.minValue + ";"+this.maxValue
+				 + " preco de compra: " + this.precoDeCompra);
+				int intervalo = (this.maxValue - this.minValue) / 2;
+				int intervaloFinal = (int) ((this.precoDeCompra + (this.minValue+intervalo))/2);
+				this.minValue = (int) (intervaloFinal - intervalo);
+				this.maxValue = (int) (intervaloFinal + intervalo);
+				 System.out.println(" Novos precos: " + this.minValue + ";"
+				 + this.maxValue);
+				setValuationPolicy(new DailyRandomValuer(this.minValue,
+						this.maxValue, getRandomEngine()));
+			}
 		}
 	}
 
-	
-	public void calcAlpha(){
-		setAlpha(getGaussian(getAlphaA(), getAlphaB())); 
-	}
-	
-	public void calcBeta(){
-		setBeta(getGaussian(getBetaA(), getBetaB())); 
+	public void calcAlpha() {
+		setAlpha(getGaussian(getAlphaA(), getAlphaB()));
 	}
 
-	private static double getGaussian(double aMean, double aVariance){
-		double gaussian=-0.1;
-		do{
-			gaussian=aMean + new Random().nextGaussian() * aVariance;
-		} while(gaussian<0);
+	public void calcBeta() {
+		setBeta(getGaussian(getBetaA(), getBetaB()));
+	}
+
+	private static double getGaussian(double aMean, double aVariance) {
+		double gaussian = -0.1;
+		do {
+			gaussian = aMean + new Random().nextGaussian() * aVariance;
+		} while (gaussian < 0);
 		return gaussian;
 	}
-	
+
 	@Override
 	public double calculateProfit(Market auction, int quantity, double price) {
 		if (currentOrder == null) {
@@ -209,8 +227,8 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 
 	public void setBeta() {
 		this.beta = getGaussian(this.betaA, this.betaB);
-	}	
-	
+	}
+
 	public double getAlpha() {
 		return alpha;
 	}
@@ -218,7 +236,7 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 	public void setAlpha(double alpha) {
 		this.alpha = alpha;
 	}
-	
+
 	public void setAlpha() {
 		this.alpha = getGaussian(this.alphaA, this.alphaB);
 	}
@@ -294,13 +312,27 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	public void deliverNews(News news){
-		
-		this.minValue = (int) (this.minValue  * (1 + news.getStockNewValue()));
-		this.maxValue = (int) (this.maxValue  * (1 + news.getStockNewValue()));
-		System.out.println("Agent: "+this.id+" min: "+this.minValue+" max: "+this.maxValue);
-		setValuationPolicy(new DailyRandomValuer(this.minValue, this.maxValue,this.getRandomEngine()));
+
+	public boolean isLossAversion() {
+		return lossAversion;
+	}
+
+	public void setLossAversion(boolean lossAversion) {
+		this.lossAversion = lossAversion;
+	}
+
+	public void deliverNews(News news) {
+
+		this.minValue = (int) (this.minValue * (1 + news.getStockNewValue()));
+		this.maxValue = (int) (this.maxValue * (1 + news.getStockNewValue()));
+		if (this.minValue < 0)
+			this.minValue = 0;
+		if (this.maxValue < 0)
+			this.maxValue = 0;
+		//System.out.println("Agent: " + this.id + " min: " + this.minValue
+		//		+ " max: " + this.maxValue);
+		setValuationPolicy(new DailyRandomValuer(this.minValue, this.maxValue,
+				this.getRandomEngine()));
 	}
 
 	public int getMinValue() {
@@ -326,15 +358,15 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 	public void setPrng(RandomEngine prng) {
 		this.prng = prng;
 	}
-	
-	
-//	@Override
-//	public double calculateProfit(Market auction, int quantity, double price) {
-//		if (isBuyer()) {
-//			return (getValuation(auction) - price) * quantity;
-//		} else {
-//			return  (price - getValuation(auction)) * quantity;
-//		}
-//	}
-	
+
+	// @Override
+	// public double calculateProfit(Market auction, int quantity, double price)
+	// {
+	// if (isBuyer()) {
+	// return (getValuation(auction) - price) * quantity;
+	// } else {
+	// return (price - getValuation(auction)) * quantity;
+	// }
+	// }
+
 }

@@ -311,8 +311,8 @@ public class MarketSimulation extends AbstractSimulation implements
 					}
 				}
 			}
-			System.out.println("total: " + news.get(0).getReceiversQuantity()
-					+ " contador: " + contador);
+			//System.out.println("total: " + news.get(0).getReceiversQuantity()
+			//		+ " contador: " + contador);
 			news.remove(0);
 		}
 

@@ -6,47 +6,47 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class News implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private double stockNewValue;
 	private int receiversQuantity;
 	private double receiversPer;
-	private ArrayList <Integer> receivers= new ArrayList <Integer> ();
+	private ArrayList<Integer> receivers = new ArrayList<Integer>();
 	private int deliverTime;
-	
-	
+
 	public News(double receiversPer, int totalAgents, int deliverTime) {
 		this.receiversPer = receiversPer;
 		this.receiversQuantity = (int) (totalAgents * receiversPer);
 		this.deliverTime = deliverTime;
 		generateNewValue();
 		generateReceivers(totalAgents);
-		
-	}
-	public News(){
-		
+
 	}
 
-	private void generateNewValue(){
+	public News() {
+
+	}
+
+	private void generateNewValue() {
 		Random random = new Random();
 		int aux;
 		do {
 			aux = random.nextInt(11);
-		} while(aux == 5);
+		} while (aux == 5);
 		this.stockNewValue = -0.5 + (aux * 0.1);
-		
+
 	}
-	
-	public void generateReceivers (int total){
+
+	public void generateReceivers(int total) {
 		Random random = new Random();
 		int aux = random.nextInt(total);
 		this.receivers.add(aux);
-		
-		for (int i = 0; i < this.receiversQuantity - 1; i++){
+
+		for (int i = 0; i < this.receiversQuantity - 1; i++) {
 			do {
 				aux = random.nextInt(total);
-			} while(this.receivers.contains(aux));
+			} while (this.receivers.contains(aux));
 			this.receivers.add(aux);
 		}
 	}
@@ -58,7 +58,7 @@ public class News implements Serializable {
 	public void setDeliverTime(int deliverTime) {
 		this.deliverTime = deliverTime;
 	}
-	
+
 	public int getReceiversQuantity() {
 		return receiversQuantity;
 	}
@@ -101,8 +101,5 @@ public class News implements Serializable {
 				+ receiversQuantity + ", receiversPer=" + receiversPer
 				+ ", deliverTime=" + deliverTime + "]";
 	}
-	
-	
-	
+
 }
-	

@@ -62,10 +62,11 @@ public class TestingJasa {
 	private static float betaB = 0.1f;
 	private static int totalBuyers = 500;
 	private static int totalSellers = 500;
-	private static int totalNews = 3;
+	private static int totalNews = 1;
 	private static ArrayList<News> news = new ArrayList<News>();
-	private static int maximumDays = 2;
-	private static int lengthOfDay = 1000;
+	private static int maximumDays = 1;
+	private static int lengthOfDay = 10000;
+	private static boolean loss_Aversion = false;
 
 	public static void main(String[] args) {
 
@@ -133,19 +134,18 @@ public class TestingJasa {
 			agent.calcBeta();
 
 			agent.setRandomEngine(randomEngine);
-			
+
 			int minValue = 50;
 			int maxValue = 55;
-			
-			ValuationPolicy valuationPolicy = new DailyRandomValuer(minValue, maxValue,
-					randomEngine);
+
+			ValuationPolicy valuationPolicy = new DailyRandomValuer(minValue,
+					maxValue, randomEngine);
 			agent.setValuationPolicy(valuationPolicy);
 			agent.setMinValue(minValue);
 			agent.setMaxValue(maxValue);
-			
-			
-			agent.setId(i);
 
+			agent.setId(i);
+			agent.setLossAversion(loss_Aversion);
 			agentList.add(agent);
 		}
 
@@ -170,37 +170,24 @@ public class TestingJasa {
 
 			int minValue = 50;
 			int maxValue = 55;
-			
-			ValuationPolicy valuationPolicy = new DailyRandomValuer(minValue, maxValue,
-					randomEngine);
+
+			ValuationPolicy valuationPolicy = new DailyRandomValuer(minValue,
+					maxValue, randomEngine);
 			agent.setValuationPolicy(valuationPolicy);
-			
+
 			agent.setMinValue(minValue);
 			agent.setMaxValue(maxValue);
-			
+
 			agent.setId(totalBuyers + i);
+			agent.setLossAversion(loss_Aversion);
 
 			agentList.add(agent);
 		}
 
 		// gerar noticias
-
-		// (double receiversPer, int totalAgents)
-		Random random = new Random();
-		int max = maximumDays * lengthOfDay;
-		int[] times = new int[totalNews];
-		for (int i = 0; i < totalNews; i++) {
-			times[i] = random.nextInt(max - 1) + 1;
+		if (!loss_Aversion){
+			//generateNews();
 		}
-		Arrays.sort(times);
-		for (int i = 0; i < totalNews; i++) {
-			double receiversPer = 0.1 * random.nextInt(8) + 0.1;
-			news.add(new News(receiversPer, (totalBuyers + totalSellers),
-					times[i]));
-			//System.out.println(news.get(i));
-		}
-
-		// new GenerateXML(news);
 
 		population.setPrng(randomEngine);
 		population.setAgentList(agentList);
@@ -209,6 +196,25 @@ public class TestingJasa {
 
 		simulationController.run();
 
+	}
+	
+	public static void generateNews(){
+		// (double receiversPer, int totalAgents)
+				Random random = new Random();
+				int max = maximumDays * lengthOfDay;
+				int[] times = new int[totalNews];
+				for (int i = 0; i < totalNews; i++) {
+					times[i] = random.nextInt(max - 1) + 1;
+				}
+				Arrays.sort(times);
+				for (int i = 0; i < totalNews; i++) {
+					double receiversPer = 0.1 * random.nextInt(5) + 0.1;
+					news.add(new News(receiversPer, (totalBuyers + totalSellers),
+							times[i]));
+					System.out.println(news.get(i));
+				}
+
+				new GenerateXML(news);
 	}
 
 }
