@@ -189,6 +189,7 @@ public class SimpleTradingAgent extends AbstractTradingAgent {
 				 + this.maxValue);
 				setValuationPolicy(new DailyRandomValuer(this.minValue,
 						this.maxValue, getRandomEngine()));
+				
 			}
 		}
 	}
